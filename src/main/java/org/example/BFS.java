@@ -1,108 +1,86 @@
+package org.example;
+
 import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.Queue;
 
 public class BFS {
-    // HashSet is used so that there wont be duplicates boards
-    public HashSet<int[][]> allBoards = new HashSet<>();
-
-    public int len;
-    public long startTime;
-    public long endTime;
-    public double durationInSeconds;
-
+    private HashSet<int[][]> visitedBoards = new HashSet<>();
+    private int puzzleSize;
+    private long startTime;
+    private long endTime;
+    private double durationInSeconds;
     private int moveCount = 0;
-    public PuzzleNode start;
-    public PuzzleGraph graph;
-    public int nodeAmount;
 
-    public BFS(PuzzleGraph graph, PuzzleNode startNode)
-    {
-        this.len = startNode.getLength();
+    private PuzzleNode startNode;
+    private PuzzleGraph graph;
+    private int nodeCount;
+
+    public BFS(PuzzleGraph graph, PuzzleNode startNode) {
+        this.puzzleSize = startNode.getLength();
         this.graph = graph;
-        this.start = startNode;
-        this.nodeAmount = 0;
-        bfs();
+        this.startNode = startNode;
+        this.nodeCount = 0;
+        executeBFS();
     }
-    public void bfs() {
+
+    private void executeBFS() {
         startTime = System.nanoTime();
         Queue<PuzzleNode> queue = new ArrayDeque<>();
-        start.setColor(PuzzleNode.Color.GRAY);
-        start.setDistance(0);
-        start.setPredecessor(null);
-        if(start.isGoal())
-        {
-            System.out.println("Starting Board is already goal");
-            return;
-        }    
+        startNode.setColor(PuzzleNode.Color.GRAY);
+        startNode.setDistance(0);
+        startNode.setPredecessor(null);
 
-        queue.add(start);
-        allBoards.add(start.getBoardConfiguration());
+        if (startNode.isGoalState()) { // פתור
+            System.out.println("Starting board is already at the goal state.");
+            return;
+        }
+
+        queue.add(startNode);
+        visitedBoards.add(startNode.getBoardConfiguration());
         while (!queue.isEmpty()) {
-            PuzzleNode u = queue.poll();
-            nodeAmount++;
-            Queue<PuzzleNode> q = u.getNodeNeighbors(allBoards);
-            for (PuzzleNode node : q) 
-            {
-                if(node.getColor() == PuzzleNode.Color.WHITE)
-                {
-                    node.setColor(PuzzleNode.Color.GRAY);
-                    node.setDistance(u.getDistance() + 1);
-                    node.setPredecessor(u);
-                    queue.add(node);
-                    if(node.isGoal())
-                    {
+            PuzzleNode currentNode = queue.poll();
+            nodeCount++;
+
+            for (PuzzleNode neighbor : currentNode.generateNeighbors(visitedBoards)) {
+                if (neighbor.getColor() == PuzzleNode.Color.WHITE) {
+                    neighbor.setColor(PuzzleNode.Color.GRAY);
+                    neighbor.setDistance(currentNode.getDistance() + 1);
+                    neighbor.setPredecessor(currentNode);
+                    queue.add(neighbor);
+
+                    if (neighbor.isGoalState()) {
                         endTime = System.nanoTime();
                         durationInSeconds = (endTime - startTime) / 1e9;
-                        moveCount = node.getDistance();
-                        getPath(node);
+                        moveCount = neighbor.getDistance();
+                        tracePath(neighbor);
                         return;
                     }
                 }
             }
-            u.setColor(PuzzleNode.Color.BLACK);     
-            }
+            currentNode.setColor(PuzzleNode.Color.BLACK);
         }
+    }
 
-public double getTime()
-{
-    return durationInSeconds;
-}
-public int getMoveCount() {
-    return moveCount;
-}
-public int getNodeCount()
-{
-    return nodeAmount;
-}
+    public double getDurationInSeconds() {
+        return durationInSeconds;
+    }
 
-public void getPath(PuzzleNode goalNode)
-{
-    int i = moveCount + 1;
-    // Goal Node
-    PuzzleNode newNode = goalNode;
-    // Getting the path and filling the graph
-    while(i > 0)
-    {
-        // if not starting Node
-        if(newNode.getPredecessor() != null)
-        {
-            graph.addEdge(newNode, newNode.getPredecessor());
-            newNode = newNode.getPredecessor();
-        }
-        // First Starting Node
-        else
-        {
-            for(PuzzleNode secondNode : graph.map.keySet())
-            {
-                if (secondNode.getPredecessor() == newNode)
-                {
-                    graph.addEdge(newNode, secondNode);
-                    break;
-                }
+    public int getMoveCount() {
+        return moveCount;
+    }
+
+    public int getNodeCount() {
+        return nodeCount;
+    }
+
+    private void tracePath(PuzzleNode goalNode) {
+        PuzzleNode currentNode = goalNode;
+        while (currentNode != null) {
+            if (currentNode.getPredecessor() != null) {
+                graph.addEdge(currentNode, currentNode.getPredecessor());
             }
-        }
-        i--;
+            currentNode = currentNode.getPredecessor();
         }
     }
 }

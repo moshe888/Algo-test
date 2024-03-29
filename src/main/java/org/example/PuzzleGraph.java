@@ -1,76 +1,43 @@
+package org.example;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class PuzzleGraph {
 
-    public HashMap<PuzzleNode, ArrayList<PuzzleNode> > map = new HashMap<>();
+    private HashMap<PuzzleNode, ArrayList<PuzzleNode>> adjacencyList = new HashMap<>();
 
+    // Adds a new puzzle node to the graph if it doesn't already exist
     public void addNode(PuzzleNode node) {
-        if (!map.containsKey(node))
-            map.put(node, new ArrayList<PuzzleNode>());          
+        adjacencyList.computeIfAbsent(node, k -> new ArrayList<>());
     }
 
+    // Adds an edge between two puzzle nodes, ensuring no duplicates
     public void addEdge(PuzzleNode source, PuzzleNode destination) {
-
         addNode(source);
         addNode(destination);
-        
-        if(!map.get(source).contains(destination))
-            map.get(source).add(destination);
-        
-        if(!map.get(destination).contains(source))
-            map.get(destination).add(source);
-    }
-    
-    public void getNodeCount()
-    {
-        System.out.println("The graph has "
-                           + map.keySet().size()
-                           + " node");
+
+        if (!adjacencyList.get(source).contains(destination)) {
+            adjacencyList.get(source).add(destination);
+        }
+
+        // Assuming this is an undirected graph
+        if (!adjacencyList.get(destination).contains(source)) {
+            adjacencyList.get(destination).add(source);
+        }
     }
 
-    public void getEdgesCount()
-    {
-        int count = 0;
-        for (PuzzleNode v : map.keySet()) {
-            count += map.get(v).size();
-        }
-        count = count / 2;
-        System.out.println("The graph has "
-                           + count
-                           + " edges.");
-    }
 
-    public void hasVertex(PuzzleNode s)
-    {
-        if (map.containsKey(s)) {
-            System.out.println("The graph contains "
-                               + s + " as a vertex.");
-        }
-        else {
-            System.out.println("The graph does not contain "
-                               + s + " as a vertex.");
-        }
-    }
- 
-    public void hasEdge(PuzzleNode s, PuzzleNode d)
-    {
-        if (map.get(s).contains(d)) {
-            System.out.println("The graph has an edge between "
-                               + s + " and " + d + ".");
-        }
-        else {
-            System.out.println("The graph has no edge between "
-                               + s + " and " + d + ".");
-        }
-    }
-    // Printing the puzzle nodes in the graph, Shows the way to the solution from starting puzzle
-    public void printGraph()
-    {
-        for(PuzzleNode node : map.keySet()){
-            node.printBoard(node.getBoardConfiguration());
-            System.out.println();
-            System.out.println();
+    // Prints the graph by listing each node and its connections
+    public void printGraph() {
+        for (PuzzleNode node : adjacencyList.keySet()) {
+            System.out.println("Node: ");
+            System.out.println(node);
+            System.out.print("Connected to: ");
+            for (PuzzleNode neighbor : adjacencyList.get(node)) {
+                System.out.print(neighbor + " ");
+            }
+            System.out.println("\n");
         }
     }
 }
