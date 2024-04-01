@@ -35,16 +35,16 @@ public class BFS {
             System.out.println("Starting board is already at the goal state.");
             return;
         }
-
+        System.out.println("BFS");
         queue.add(startNode);
         visitedBoards.add(startNode.getBoardConfiguration());
         while (!queue.isEmpty()) {
             PuzzleNode currentNode = queue.poll();
+            System.out.println(currentNode);
             nodeCount++;
-
-            for (PuzzleNode neighbor : currentNode.generateNeighbors(visitedBoards)) {
+             for (PuzzleNode neighbor : currentNode.generateNeighbors(visitedBoards)) {
                 if (neighbor.getColor() == PuzzleNode.Color.WHITE) {
-                    neighbor.setColor(PuzzleNode.Color.GRAY);
+                     neighbor.setColor(PuzzleNode.Color.GRAY);
                     neighbor.setDistance(currentNode.getDistance() + 1);
                     neighbor.setPredecessor(currentNode);
                     queue.add(neighbor);
@@ -54,6 +54,7 @@ public class BFS {
                         durationInSeconds = (endTime - startTime) / 1e9;
                         moveCount = neighbor.getDistance();
                         tracePath(neighbor);
+                        System.out.println("----------");
                         return;
                     }
                 }
