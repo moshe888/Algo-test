@@ -287,15 +287,13 @@ public class PuzzleNode {
         }
         return distance;
     }
+
     public int calculateNonAdmissibleHeuristic() {
         int manhattanDistance = calculateManhattanDistance();
          return manhattanDistance * 2;
     }
-//    public int calculateRandomHeuristic() {
-//        Random rand = new Random();
-//        int dis = calculateManhattanDistance() + rand.nextInt(20) + 5 ;
-//        return dis;
-//    }
+
+
 }
 
 

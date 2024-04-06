@@ -33,11 +33,11 @@ public class AStar {
         initializeStartNode();
         queue.add(start);
         allBoards.add(start.getBoardConfiguration());
-        System.out.println("Astar - " + start.getHeuristic() + ":");
-        System.out.println("");
+//        System.out.println("Astar - " + start.getHeuristic() + ":");
+//        System.out.println("");
         while (!queue.isEmpty()) {
             PuzzleNode currentNode = queue.poll();
-            System.out.println(currentNode);
+//            System.out.println(currentNode);
 
             if (currentNode.isGoalState()) {
                 endTimeMeasurement();

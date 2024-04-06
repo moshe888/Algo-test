@@ -206,7 +206,7 @@ public class Main {
     {
         len = board.length;
         startingBoard = new PuzzleNode(board,0, moves);
-        System.out.println(startingBoard);
+//        System.out.println(startingBoard);
 
         // ****************************** BFS ******************************
         puzzleGraph = new PuzzleGraph();

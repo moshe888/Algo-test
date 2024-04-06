@@ -35,12 +35,12 @@ public class BFS {
             System.out.println("Starting board is already at the goal state.");
             return;
         }
-        System.out.println("BFS");
+//        System.out.println("BFS");
         queue.add(startNode);
         visitedBoards.add(startNode.getBoardConfiguration());
         while (!queue.isEmpty()) {
             PuzzleNode currentNode = queue.poll();
-            System.out.println(currentNode);
+//            System.out.println(currentNode);
             nodeCount++;
              for (PuzzleNode neighbor : currentNode.generateNeighbors(visitedBoards)) {
                 if (neighbor.getColor() == PuzzleNode.Color.WHITE) {
