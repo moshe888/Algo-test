@@ -1,293 +1,189 @@
 package org.example;
 
 import java.util.Random;
-//אופציה להכניס לוח ידני
-//הרצת 5 לוחות רנדומלים עם ערבוב 10 פעמים 15 \24
-//ממןצע הרצת 50 לוחות רנדומלים 24\15
+import java.util.Stack;
 
 public class Main {
-    public static final int[][] goalBoard15 = {
-               {1, 2, 3, 4},
-               {5, 6, 7, 8},
-               {9, 10, 11, 12},
-               {13, 14, 15, 0}
-       };
-    public static final int[][] goalBoard24 = {
-               {1,  2,   3, 4,  5 },
-               {6,  7,  8,  9,  10},
-               {11, 12, 13, 14, 15},
-               {16, 17, 18, 19, 20},
-               {21, 22, 23, 24, 0 }
+    public static final int[][] goal15 = {
+            {1, 2, 3, 4},
+            {5, 6, 7, 8},
+            {9, 10, 11, 12},
+            {13, 14, 15, 0}
+    };
+    public static final int[][] goal24 = {
+            {1, 2, 3, 4, 5},
+            {6, 7, 8, 9, 10},
+            {11, 12, 13, 14, 15},
+            {16, 17, 18, 19, 20},
+            {21, 22, 23, 24, 0}
+    };
 
-       };
-
-
-
-    // Starting board that all the algorithms will use
-    public PuzzleNode startingBoard;
-
-    // Variables for time calculating and board length
-    public long startTime;
-    public long endTime;
-    public double durationInSeconds;
+    public PuzzleNode startBoard;
     public int len;
 
-    // Variables of BFS, Dijakstra, A* ad
+    public PuzzleNode bfsNode;
+    public PuzzleGraph pGraph;
+    public BFS bfsObj;
+    public int nAmtBfs, nAvgBfs = 0, mCntBfs, mAvgBfs = 0;
+    public double durSecBfs, durAvgBfs = 0;
 
-    public PuzzleNode bfsBoard;
-    public PuzzleGraph puzzleGraph;
-    public BFS bfs15;
-    public int nodeAmountBfs;
-    public int nodeAvgBfs = 0;
-    public int moveCountBfs;
-    public int moveCountAvgBfs = 0;
-    public double durationInSecondsBfs;
-    public double durationInSecondsAvgBfs = 0;
+    public PuzzleNode astarDNode;
+    public PuzzleGraph astarDGraph;
+    public AStar astarD;
+    public int nAmtD, nAvgD = 0, mCntD, mAvgD = 0;
+    public double durSecD, durAvgD = 0;
 
-    public PuzzleNode aStarDijakstraBoard;
-    public PuzzleGraph aStarDijakstraPuzzleGraph;
-    public AStar AStarDijakstra;
-    public int nodeAmountDijakstra;
-    public int nodeAvgDijakstra = 0;
-    public int moveCountDijakstra;
-    public int moveCountAvgDijakstra = 0;
-    public double durationInSecondsDijakstra;
-    public double durationInSecondsAvgDijakstra = 0;
+    public PuzzleNode astarNode;
+    public PuzzleGraph astarGraph;
+    public AStar astar;
+    public int nAmtA, nAvgA = 0, mCntA, mAvgA = 0;
+    public double durSecA, durAvgA = 0;
 
-    public PuzzleNode aStarBoard;
-    public PuzzleGraph aStarPuzzleGraph;
-    public AStar AStar;
-    public int nodeAmountAStar;
-    public int nodeAvgAStar = 0;
-    public int moveCountAStar;
-    public int moveCountAvgAStar = 0;
-    public double durationInSecondsAStar;
-    public double durationInSecondsAvgAStar = 0;
+    public PuzzleNode astarRNode;
+    public PuzzleGraph astarRGraph;
+    public AStar astarR;
+    public int nAmtR, nAvgR = 0, mCntR, mAvgR = 0;
+    public double durSecR, durAvgR = 0;
 
-    public PuzzleNode aStarRandomHeuristicBoard;
-    public PuzzleGraph aStarRandomHeuristicPuzzleGraph;
-    public AStar aStarRandomHeuristic;
-    public int nodeAmountAStar2;
-    public int nodeAvgAStar2 = 0;
-    public int moveCountAStar2;
-    public int moveCountAvgAStar2 = 0;
-    public double durationInSecondsAStar2;
-    public double durationInSecondsAvgAStar2 = 0;
+    public void resetVars() {
+        durAvgBfs = durAvgD = durAvgA = durAvgR = 0;
+        nAvgBfs = nAvgD = nAvgA = nAvgR = 0;
+        mAvgBfs = mAvgD = mAvgA = mAvgR = 0;
+    }
 
+    public void printAvgAll() {
+        printAvg("BFS", nAvgBfs, mAvgBfs, durAvgBfs);
+        printAvg("Dijkstra", nAvgD, mAvgD, durAvgD);
+        printAvg("A* Manhattan", nAvgA, mAvgA, durAvgA);
+        printAvg("A* Non-Admissible", nAvgR, mAvgR, durAvgR);
+    }
 
-    // Variables Reset for the 50 puzzle average test
-    public void resetVariables()
-    {
-        durationInSecondsAvgBfs = 0;
-        nodeAvgBfs = 0;
-        moveCountAvgBfs = 0;
+    public void printAll() {
+        printSingle("BFS", nAmtBfs, mCntBfs, durSecBfs);
+        printSingle("Dijkstra", nAmtD, mCntD, durSecD);
+        printSingle("A* Manhattan", nAmtA, mCntA, durSecA);
+        printSingle("A* Non-Admissible", nAmtR, mCntR, durSecR);
+    }
 
-        durationInSecondsAvgDijakstra = 0;
-        nodeAvgDijakstra = 0;
-        moveCountAvgDijakstra = 0;
+    public void printSingle(String name, int n, int m, double d) {
+        System.out.println("-------------------- " + name + " Stats -----------------------------");
+        printRes(len * len - 1, d, n, m);
+    }
 
-        durationInSecondsAvgAStar = 0;
-        nodeAvgAStar = 0;
-        moveCountAvgAStar = 0;
+    public void printAvg(String name, int n, int m, double d) {
+        System.out.println("-------------------- " + name + " Average Stats -----------------------------");
+        printRes(len * len - 1, d / 50, n / 50, m / 50);
+    }
 
-        durationInSecondsAvgAStar2 = 0;
-        nodeAvgAStar2 = 0;
-        moveCountAvgAStar2 = 0;
+    public void printRes(int size, double d, int n, int m) {
+        System.out.printf("Board Size: %d%n", size);
+        System.out.printf("Time: %s seconds%n", String.format("%.9f", d));
+        System.out.printf("Nodes: %d%n", n);
+        System.out.printf("Moves: %d%n", m);
     }
-    // ****************************** PRINTINGS ******************************
-    public void printAvgAll()
-    {
-        bfsPrintAvg();
-        dijakstraPrintAvg();
-        aStarPrintAvg();
-        aStar2PrintAvg();
-    }
-    public void printAll()
-    {
-        bfsPrintSingle();
-        dijakstraPrintSingle();
-        aStarPrintSingle();
-        aStar2PrintSingle();
-    }
-    public void bfsPrintAvg()
-    {
-        System.out.println("-------------------- BFS Average Stats -----------------------------\n");
-        printAverageResults(nodeAvgBfs, moveCountAvgBfs, durationInSecondsAvgBfs);
-    }
-    public void dijakstraPrintAvg()
-    {
-        System.out.println("-------------------- Dijakstra Average Stats --------------------------");
-        printAverageResults(nodeAvgDijakstra, moveCountAvgDijakstra, durationInSecondsAvgDijakstra);
-    }
-    public void aStarPrintAvg()
-    {
-        System.out.println("-------------------- AStar Manhattan Average Stats --------------------------");
-        printAverageResults(nodeAvgAStar, moveCountAvgAStar, durationInSecondsAvgAStar);
-    }
-    public void aStar2PrintAvg()
-    {
-        System.out.println("-------------------- AStar Non Admissible Heuristic Average Stats --------------------------");
-        printAverageResults(nodeAvgAStar2, moveCountAvgAStar2, durationInSecondsAvgAStar2);
-    }
-    public void bfsPrintSingle()
-    {
-        System.out.println("-------------------- BFS Stats -----------------------------\n");
-        printResults(nodeAmountBfs, moveCountBfs, durationInSecondsBfs);
-    }
-    public void dijakstraPrintSingle()
-    {
-        System.out.println("-------------------- Dijakstra Stats --------------------------");
-        printResults(nodeAmountDijakstra, moveCountDijakstra, durationInSecondsDijakstra);
-    }
-    public void aStarPrintSingle()
-    {
-        System.out.println("-------------------- AStar Manhattan Stats --------------------------");
-        printResults(nodeAmountAStar, moveCountAStar, durationInSecondsAStar);
-    }
-    public void aStar2PrintSingle()
-    {
-        System.out.println("-------------------- AStar Non Admissible Heuristic Stats --------------------------");
-        printResults(nodeAmountAStar2, moveCountAStar2, durationInSecondsAStar2);
-    }
-    public void printResults(int nodeAmount, int moveCount, double durationInSeconds)
-    {
-        System.out.printf("Board Size is %d:%n",len * len - 1);
-        System.out.printf("Time taken is: %s seconds%n", String.format("%.9f", durationInSeconds));
-        System.out.printf("Node Amount is: %d%n", nodeAmount);
-        System.out.printf("Move Count is: %d%n", moveCount);
-    }
-    public void printAverageResults(int nodeAvg, int moveCountAvg, double durationInSecondsAvg)
-    {
-        System.out.printf("Board Size is %d:%n",len * len - 1);
-        System.out.printf("Average Time taken is: %s seconds%n", String.format("%.9f", durationInSecondsAvg / 50));
-        System.out.printf("Average Node Amount is: %d%n", nodeAvg / 50);
-        System.out.printf("Average Move Count is: %d%n",moveCountAvg / 50);
-    }
-        // ****************************** PRINTINGS ******************************
 
-    // 5 Random Puzzle Test
-    public void test5()
-    {
-        int counter = 8;  // 8 9 10 11 12
-        for(int i = 0 ; i < 5; i++)
-        {
-            testBoard(goalBoard15, counter); // 12 possible
+    public void test5() {
+        int c = 8;
+        for (int i = 0; i < 5; i++) {
+            test(goal15, c++);
             printAll();
-            counter++;
         }
-        counter = 7; // 7 8 9 10 11
-        for(int i = 0; i < 5; i++)
-        {
-            testBoard(goalBoard24, counter); // 11 possible
+        c = 7;
+        for (int i = 0; i < 5; i++) {
+            test(goal24, c++);
             printAll();
-            counter++;
         }
     }
-    // 50 Random Puzzle Test
-    public void test50()
-    {
-        Random rand = new Random();
-        for(int i = 0; i < 50; i++)
-        {
-            // from 10 - 11
-            testBoard(goalBoard15, rand.nextInt(2) + 10); // 12 possible
-        }
+
+    public void test50() {
+        Random r = new Random();
+        for (int i = 0; i < 50; i++) test(goal15, r.nextInt(2) + 10);
         printAvgAll();
-        resetVariables();
-        for(int i = 0 ; i < 50; i++)
-        {
-            // from 9 - 10
-            testBoard(goalBoard24, rand.nextInt(2) + 9); // 11 possible
-        }
+        resetVars();
+        for (int i = 0; i < 50; i++) test(goal24, r.nextInt(2) + 9);
         printAvgAll();
     }
-    // Recieves a board and the moves
-    public void testBoard(int[][] board, int moves)
-    {
+
+    public void test(int[][] board, int moves) {
         len = board.length;
-        startingBoard = new PuzzleNode(board,0, moves);
-//        System.out.println(startingBoard);
+        startBoard = new PuzzleNode(board, 0, moves);
+        System.out.println(startBoard);
 
-        // ****************************** BFS ******************************
-        puzzleGraph = new PuzzleGraph();
-        bfsBoard = new PuzzleNode(startingBoard.getBoardConfiguration(),0 ,0);
-        bfs15 = new BFS(puzzleGraph, bfsBoard);
-        durationInSecondsBfs = bfs15.getDurationInSeconds();
-        durationInSecondsAvgBfs += durationInSecondsBfs;
-        nodeAmountBfs = bfs15.getNodeCount();
-        nodeAvgBfs += nodeAmountBfs;
-        moveCountBfs = bfs15.getMoveCount();
-        moveCountAvgBfs += moveCountBfs;
-        //****************************** AStar Dijakstra Distance ******************************
-        aStarDijakstraBoard = new PuzzleNode(startingBoard.getBoardConfiguration(),0, 0);
-        aStarDijakstraPuzzleGraph = new PuzzleGraph();
-        AStarDijakstra = new AStar(aStarDijakstraPuzzleGraph,aStarDijakstraBoard);
-        durationInSecondsDijakstra = AStarDijakstra.getDurationInSeconds();
-        durationInSecondsAvgDijakstra += durationInSecondsDijakstra;
-        nodeAmountDijakstra = AStarDijakstra.getNodeAmount();
-        nodeAvgDijakstra += nodeAmountDijakstra;
-        moveCountDijakstra = AStarDijakstra.getMoveCount();
-        moveCountAvgDijakstra += moveCountDijakstra;
-        // ****************************** AStar Manhattan Distance ******************************
-        aStarBoard = new PuzzleNode(startingBoard.getBoardConfiguration(),1, 0);
-        aStarPuzzleGraph = new PuzzleGraph();
-        AStar = new AStar(aStarPuzzleGraph, aStarBoard);
-        durationInSecondsAStar = AStar.getDurationInSeconds();
-        durationInSecondsAvgAStar += durationInSecondsAStar;
-        nodeAmountAStar = AStar.getNodeAmount();
-        nodeAvgAStar += nodeAmountAStar;
-        moveCountAStar = AStar.getMoveCount();
-        moveCountAvgAStar += moveCountAStar;
-        // ****************************** AStar Non Admissible Heuristic Distance ******************************
-        aStarRandomHeuristicBoard = new PuzzleNode(startingBoard.getBoardConfiguration(),2, 0);
-        aStarRandomHeuristicPuzzleGraph = new PuzzleGraph();
-        aStarRandomHeuristic = new AStar(aStarRandomHeuristicPuzzleGraph, aStarRandomHeuristicBoard);
-        durationInSecondsAStar2 = aStarRandomHeuristic.getDurationInSeconds();
-        durationInSecondsAvgAStar2 += durationInSecondsAStar2;
-        nodeAmountAStar2 = aStarRandomHeuristic.getNodeAmount();
-        nodeAvgAStar2 += nodeAmountAStar2;
-        moveCountAStar2 = aStarRandomHeuristic.getMoveCount();
-        moveCountAvgAStar2 += moveCountAStar2;
+        // Initialize and execute BFS
+        pGraph = new PuzzleGraph();
+        bfsNode = new PuzzleNode(startBoard.getBoardConfiguration(), 0, 0);
+        Stack<PuzzleNode> stack = new Stack<>();
+        bfsObj = new BFS(pGraph, bfsNode, stack);
+        durSecBfs = bfsObj.getDurationInSeconds();
+        durAvgBfs += durSecBfs;
+        nAmtBfs = bfsObj.getNodeCount();
+        nAvgBfs += nAmtBfs;
+        mCntBfs = bfsObj.getMoveCount();
+        mAvgBfs += mCntBfs;
+        for (PuzzleNode node : stack) {
+            System.out.println(node);
+        }
+
+        // Initialize and execute A* with Dijkstra
+        astarDNode = new PuzzleNode(startBoard.getBoardConfiguration(), 0, 0);
+        astarDGraph = new PuzzleGraph();
+        astarD = new AStar(astarDGraph, astarDNode);
+        durSecD = astarD.getDurationInSeconds();
+        durAvgD += durSecD;
+        nAmtD = astarD.getNodeAmount();
+        nAvgD += nAmtD;
+        mCntD = astarD.getMoveCount();
+        mAvgD += mCntD;
+
+        // Initialize and execute A* with Manhattan Distance
+        astarNode = new PuzzleNode(startBoard.getBoardConfiguration(), 1, 0);
+        astarGraph = new PuzzleGraph();
+        astar = new AStar(astarGraph, astarNode);
+        durSecA = astar.getDurationInSeconds();
+        durAvgA += durSecA;
+        nAmtA = astar.getNodeAmount();
+        nAvgA += nAmtA;
+        mCntA = astar.getMoveCount();
+        mAvgA += mCntA;
+
+        // Initialize and execute A* with a non-admissible heuristic
+        astarRNode = new PuzzleNode(startBoard.getBoardConfiguration(), 2, 0);
+        astarRGraph = new PuzzleGraph();
+        astarR = new AStar(astarRGraph, astarRNode);
+        durSecR = astarR.getDurationInSeconds();
+        durAvgR += durSecR;
+        nAmtR = astarR.getNodeAmount();
+        nAvgR += nAmtR;
+        mCntR = astarR.getMoveCount();
+        mAvgR += mCntR;
     }
+
     public static void main(String[] args) {
+        Main main = new Main();
+        int[] result = PuzzleInput.getManualMoves();
 
-       Main main = new Main();
-       int[] result = PuzzleInput.getManualMoves();
-
-       if(result[0] > 0)
-       {
-            main.testBoard(goalBoard15, result[0]);
+        if (result[0] > 0) {
+            main.test(goal15, result[0]);
             main.printAll();
-            main.testBoard(goalBoard24, result[0]);
+            main.test(goal24, result[0]);
             main.printAll();
-       }
-       else if(result[1] == 15)
-       {
+        } else if (result[1] == 15) {
             int[][] initialBoard15 = PuzzleInput.getManualInput15();
-            if(initialBoard15 != null)
-            {
-                main.testBoard(initialBoard15, 0);
+            if (initialBoard15 != null) {
+                main.test(initialBoard15, 0);
                 main.printAll();
             }
-        }
-        else if(result[1] == 24)
-        {
+        } else if (result[1] == 24) {
             int[][] initialBoard24 = PuzzleInput.getManualInput24();
-            if(initialBoard24 != null)
-            {
-                main.testBoard(initialBoard24, 0);
+            if (initialBoard24 != null) {
+                main.test(initialBoard24, 0);
                 main.printAll();
             }
-        }
-        else
-        {
-            System.out.println("Starting test5\n");
+        } else {
+            System.out.println("Starting test5");
             main.test5();
-            System.out.println("Starting test50\n");
+            System.out.println("Starting test50");
             main.test50();
         }
-       // PuzzleInput.scanner.close();
     }
-
-
 }

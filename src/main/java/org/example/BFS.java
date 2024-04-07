@@ -1,4 +1,5 @@
 package org.example;
+import  java.util.Stack;
 
 import java.util.ArrayDeque;
 import java.util.HashSet;
@@ -14,13 +15,16 @@ public class BFS {
 
     private PuzzleNode startNode;
     private PuzzleGraph graph;
+    public Stack<PuzzleNode> stack  ;
     private int nodeCount;
 
-    public BFS(PuzzleGraph graph, PuzzleNode startNode) {
+    public BFS(PuzzleGraph graph, PuzzleNode startNode ,  Stack<PuzzleNode> stack )
+    {
         this.puzzleSize = startNode.getLength();
         this.graph = graph;
         this.startNode = startNode;
         this.nodeCount = 0;
+        this.stack = stack;
         executeBFS();
     }
 
@@ -77,11 +81,15 @@ public class BFS {
 
     private void tracePath(PuzzleNode goalNode) {
         PuzzleNode currentNode = goalNode;
+
         while (currentNode != null) {
             if (currentNode.getPredecessor() != null) {
+                stack.push(currentNode);
                 graph.addEdge(currentNode, currentNode.getPredecessor());
             }
             currentNode = currentNode.getPredecessor();
         }
+        stack.push(currentNode);
+
     }
 }

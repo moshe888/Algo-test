@@ -27,17 +27,24 @@ public class PuzzleGraph {
         }
     }
 
-
-    // Prints the graph by listing each node and its connections
-    public void printGraph() {
+    public void printGraph()
+    {
         for (PuzzleNode node : adjacencyList.keySet()) {
-            System.out.println("Node: ");
-            System.out.println(node);
-            System.out.print("Connected to: ");
-            for (PuzzleNode neighbor : adjacencyList.get(node)) {
-                System.out.print(neighbor + " ");
-            }
-            System.out.println("\n");
+             System.out.println(node);
+            System.out.println();
         }
     }
+
+
+//     public void printGraph() {
+//        for (PuzzleNode node : adjacencyList.keySet()) {
+//            System.out.println("Node: ");
+//            System.out.println(node);
+//            System.out.print("Connected to: ");
+//            for (PuzzleNode neighbor : adjacencyList.get(node)) {
+//                System.out.print(neighbor + " ");
+//            }
+//            System.out.println("\n");
+//        }
+//    }
 }

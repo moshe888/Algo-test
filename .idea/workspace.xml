@@ -6,9 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="cbbd1116-82df-49ee-bb37-a69a700b2850" name="Changes" comment="הי">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/AStar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/AStar.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/BFS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/BFS.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/PuzzleGraph.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/PuzzleGraph.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/PuzzleNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/PuzzleNode.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -81,6 +81,8 @@
       <workItem from="1711707663966" duration="6125000" />
       <workItem from="1711999957097" duration="2446000" />
       <workItem from="1712317220179" duration="7543000" />
+      <workItem from="1712431232146" duration="64000" />
+      <workItem from="1712507843028" duration="4602000" />
     </task>
     <task id="LOCAL‎-00001" summary="הי">
       <created>1711723817665</created>
@@ -122,7 +124,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/example/Main.java</url>
-          <line>206</line>
+          <line>107</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>

@@ -34,7 +34,7 @@ public class PuzzleNode {
         initializeSearchAttributes(heuristicValue);
     }
 
-    private void locateEmptyTile(int moves) {
+    private void locateEmptyTile(int moves) {//למצוא תץא נריק
         if (moves == 0) {
             int[] emptyTilePosition = findEmptyTilePosition();
             if (isValidPosition(emptyTilePosition)) {
