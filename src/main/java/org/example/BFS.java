@@ -89,7 +89,6 @@ public class BFS {
             }
             currentNode = currentNode.getPredecessor();
         }
-        stack.push(currentNode);
 
     }
 }
